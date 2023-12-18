@@ -1,0 +1,19 @@
+{
+    "PropertyID": 11010137.0,
+    "LocalityName": "Lebbeke",
+    "PostalCode": 9280,
+    "TypeOfProperty": "HOUSE",
+    "SubtypeOfProperty": "VILLA",
+    "TypeOfSale": "",
+    "NumberOfRooms": 6.0,
+    "LivingArea": null,
+    "EquippedKitchen": 1.0,
+    "Furnished": 0.0,
+    "OpenFire": 0.0,
+    "Terrace": 0.0,
+    "Garden": 0.0,
+    "Surface": 3227.0,
+    "NumberOfFacades": 4.0,
+    "SwimmingPool": false,
+    "StateOfBuilding": "AS_NEW"
+}

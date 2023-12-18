@@ -1,0 +1,13 @@
+# Ignore venv directory
+venv/
+# Ignore all log files
+logs/
+# Ignore all airflow scheduler files
+airflow-scheduler.err
+airflow-scheduler.out
+airflow-scheduler.pid
+airflow-scheduler.log
+# Ignore all airflow webserver files
+webserver_config.py
+# Py cache
+__pycache__/
