@@ -9,5 +9,10 @@ airflow-scheduler.pid
 airflow-scheduler.log
 # Ignore all airflow webserver files
 webserver_config.py
+airflow-webserver.err
+airflow-webserver.out
+airflow-webserver.log
+airflow-webserver-monitor.pid
 # Py cache
 __pycache__/
+# Ignore all airflow worker files

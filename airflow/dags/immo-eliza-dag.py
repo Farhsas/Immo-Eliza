@@ -4,6 +4,7 @@ from airflow.utils.task_group import TaskGroup
 from datetime import datetime, timedelta
 from utils.scraping import houses_scraper, apartments_scraper
 from utils.ml import model_training
+from utils.optuna import optuna
 import os
 
 
@@ -89,14 +90,9 @@ with DAG(
     with TaskGroup(
         "training_and_dashboard", tooltip="Training model & Dashboard"
     ) as section_3:
-        # Define PythonOperator for training model task
-        training_dag = PythonOperator(
-            task_id="training_model", python_callable=training_model_task
-        )
         # Define PythonOperator for analysis dashboard task
         analysis_dashboard_dag = PythonOperator(
             task_id="dashboard", python_callable=analysis_dashboard_task
         )
-
     # Set the dependencies between TaskGroups
     section_1 >> section_2 >> section_3
