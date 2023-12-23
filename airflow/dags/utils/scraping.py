@@ -6,6 +6,7 @@ import time
 import ssl  # Used to handle Secure Sockets Layer (SSL) errors and configurations
 from bs4 import BeautifulSoup  # Used for web scraping and parsing HTML content
 from itertools import chain  # Used for chaining together iterable items or element
+from datetime import datetime  # Used for working with dates and times
 
 
 def property_id(script):
@@ -449,7 +450,11 @@ async def get_script(url, client):
         The function can be used to extract structured data from web pages for further processing
         or analysis, such as property information in real estate listings.
     """
-    r = await client.get(url)
+    try:
+        r = await client.get(url)
+    except:
+        print(f"Failed to read from {url}")
+        return None
     soup = BeautifulSoup(r.content, "html.parser")
 
     try:
@@ -536,6 +541,8 @@ def houses_scraper():
     """
     The main function that orchestrates the data extraction process and saves the data to a CSV file.
     """
+    today = time.strftime("%Y-%m-%d")
+
     links = asyncio.run(get_links_houses())
     detail_links = []
     for link in chain(links):
@@ -545,13 +552,15 @@ def houses_scraper():
     details = asyncio.run(get_details(detail_links))
 
     df = pd.DataFrame(details)
-    df.to_csv("airflow/dags/datasets/houses_data.csv")
+    df.to_csv(f"airflow/dags/datasets/houses_data/houses_data_{today}.csv", index=False)
 
 
 def apartments_scraper():
     """
     The main function that orchestrates the data extraction process and saves the data to a CSV file.
     """
+    today = time.strftime("%Y-%m-%d")
+
     links = asyncio.run(get_links_apartments())
     detail_links = []
     for link in chain(links):
@@ -561,11 +570,7 @@ def apartments_scraper():
     details = asyncio.run(get_details(detail_links))
 
     df = pd.DataFrame(details)
-    df.to_csv("airflow/dags/datasets/apartments_data.csv")
-
-
-if __name__ == "__main__":
-    start_time = time.time()
-    houses_scraper()
-    apartments_scraper()
-    print("--- %s seconds ---" % (time.time() - start_time))
+    df.to_csv(
+        f"airflow/dags/datasets/apartments_data/apartments_data_{today}.csv",
+        index=False,
+    )

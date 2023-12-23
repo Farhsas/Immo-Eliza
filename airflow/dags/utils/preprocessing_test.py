@@ -102,7 +102,7 @@ def new_features(df):
 
 
 # Function to perform preprocessing
-def preprocessing(df):
+def preprocessing(type):
     """
     Performs preprocessing on the input DataFrame.
 
@@ -112,6 +112,14 @@ def preprocessing(df):
     Returns:
         pd.DataFrame: The preprocessed DataFrame.
     """
+    if type == "houses":
+        df = pd.read_csv("airflow/dags/datasets/houses_data.csv", engine="pyarrow")
+    elif type == "apartments":
+        df = pd.read_csv(
+            "airflow/dags/datasets/apartments_data.csv",
+            engine="pyarrow",
+        )
+
     df = df.drop("LocalityName", axis=1)
     df = df.dropna(subset="Price")
     df = df.dropna(subset="PostalCode")
@@ -140,7 +148,7 @@ def preprocessing(df):
             "SubtypeOfProperty",
             "StateOfBuilding",
             "TypeOfSale",
-            "",
+            "Unnamed: 0",
         ],
         axis=1,
     )

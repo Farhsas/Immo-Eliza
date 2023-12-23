@@ -6,7 +6,7 @@ from utils.preprocessing_test import preprocessing
 import pickle
 
 
-def training(df):
+def training(df, type):
     """
     Trains a CatBoostRegressor model using the provided dataframe.
 
@@ -43,7 +43,11 @@ def training(df):
 
     model = catboost.fit(training_set, eval_set=test_set)
 
-    pickle.dump(model, open("airflow/dags/ML_Models/catboost.pkl", "wb"))
+    if type == "houses":
+        pickle.dump(model, open("airflow/dags/ML_Models/catboost_houses.pkl", "wb"))
+
+    elif type == "apartments":
+        pickle.dump(model, open("airflow/dags/ML_Models/catboost_apartments.pkl", "wb"))
 
     scores = {
         "r2": catboost.score(test_set),
@@ -52,18 +56,15 @@ def training(df):
     return scores
 
 
-def model_training():
-    df_houses = pd.read_csv("airflow/dags/datasets/houses_data.csv", engine="pyarrow")
-    df_apartments = pd.read_csv(
-        "airflow/dags/datasets/apartments_data.csv", engine="pyarrow"
-    )
-
-    df = pd.merge(df_houses, df_apartments, how="outer")
-
-    df = preprocessing(df)
+def houses_training():
+    df = preprocessing(type="houses")
     df.dropna(subset="Price", inplace=True)
-    print(df.shape)
 
-    model = training(df)
+    model = training(df, "houses")
 
-    print(model)
+
+def apartments_training():
+    df = preprocessing(type="apartments")
+    df.dropna(subset="Price", inplace=True)
+
+    model = training(df, "apartments")

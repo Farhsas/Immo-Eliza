@@ -3,7 +3,8 @@ from airflow.operators.python import PythonOperator
 from airflow.utils.task_group import TaskGroup
 from datetime import datetime, timedelta
 from utils.scraping import houses_scraper, apartments_scraper
-from utils.ml import model_training
+from utils.merge_data import merge_data
+from utils.ml import houses_training, apartments_training
 from utils.optuna import optuna
 import os
 
@@ -28,12 +29,18 @@ def apartments_scraper_task():
     apartments_scraper()
 
 
-# Define the function for training the model
-def training_model_task():
+def merge_houses_data():
     """
-    Function to train the machine learning model.
+    Function to merge houses data.
     """
-    model_training()
+    merge_data("houses")
+
+
+def merge_apartments_data():
+    """
+    Function to merge apartments data.
+    """
+    merge_data("apartments")
 
 
 # Define the function for data cleaning during training
@@ -75,8 +82,18 @@ with DAG(
             task_id="scraping_apartments", python_callable=apartments_scraper_task
         )
 
+    with TaskGroup("merging", tooltip="Merging") as section_2:
+        # Define PythonOperator for merging houses task
+        merge_houses = PythonOperator(
+            task_id="merge_houses", python_callable=merge_houses_data
+        )
+        # Define PythonOperator for merging apartments task
+        merge_apartments = PythonOperator(
+            task_id="merge_apartments", python_callable=merge_apartments_data
+        )
+
     # Define TaskGroup for data cleaning tasks
-    with TaskGroup("data_cleaning", tooltip="Data cleaning") as section_2:
+    with TaskGroup("data_cleaning", tooltip="Data cleaning") as section_3:
         # Define PythonOperator for data cleaning during training task
         data_cleaning_training = PythonOperator(
             task_id="training_cleaning", python_callable=data_cleaning_training_task
@@ -89,10 +106,11 @@ with DAG(
     # Define TaskGroup for training and dashboard tasks
     with TaskGroup(
         "training_and_dashboard", tooltip="Training model & Dashboard"
-    ) as section_3:
+    ) as section_4:
         # Define PythonOperator for analysis dashboard task
         analysis_dashboard_dag = PythonOperator(
             task_id="dashboard", python_callable=analysis_dashboard_task
         )
+
     # Set the dependencies between TaskGroups
-    section_1 >> section_2 >> section_3
+    section_1 >> section_2 >> section_3 >> section_4
