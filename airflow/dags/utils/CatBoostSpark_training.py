@@ -4,7 +4,15 @@ from pyspark.sql.functions import col
 from pyspark.ml import Pipeline
 from pyspark.ml.feature import StringIndexer, VectorAssembler
 from pyspark.ml.evaluation import RegressionEvaluator
-from pyspark.ml.regression import LinearRegression
+from pyspark.ml.regression import (
+    AFTSurvivalRegression,
+    GBTRegressor,
+    GeneralizedLinearRegression,
+    IsotonicRegression,
+    LinearRegression,
+    RandomForestRegressor,
+    FMRegressor,
+)
 from Spark_preprocessing import spark_preprocessing
 
 
@@ -13,7 +21,7 @@ def prepare_vector(df: DataFrame, assembler):
     return result_df
 
 
-def CatBoostSpark_training():
+def training():
     spark = SparkSession.builder.master("local").appName("CatBoostSpark").getOrCreate()
 
     # Load Data
@@ -55,9 +63,7 @@ def CatBoostSpark_training():
     )
 
     # LinearRegression
-    regressor = LinearRegression(
-        featuresCol="features", labelCol=TARGET_LABEL, maxIter=10
-    )
+    regressor = AFTSurvivalRegression(labelCol=TARGET_LABEL, featuresCol="features")
 
     # train a model
     model = regressor.fit(train)
@@ -68,4 +74,4 @@ def CatBoostSpark_training():
     spark.stop()
 
 
-CatBoostSpark_training()
+training()

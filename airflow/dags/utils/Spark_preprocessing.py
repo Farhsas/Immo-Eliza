@@ -13,6 +13,9 @@ def spark_preprocessing(spark):
         inferSchema=True,
     )
 
+    # Fill the missing values with 0
+    df = df.fillna(0)
+
     # Filter the Postal Code with regex
     df = df.filter(df["PostalCode"].rlike("^[0-9]{4}$"))
 
@@ -27,7 +30,9 @@ def spark_preprocessing(spark):
         "TypeOfSale",
     ]
     indexers = [
-        StringIndexer(inputCol=column, outputCol=column + "_index").fit(df)
+        StringIndexer(
+            inputCol=column, outputCol=column + "_index", handleInvalid="keep"
+        ).fit(df)
         for column in categorical_columns
     ]
     encoder = OneHotEncoder(
@@ -40,6 +45,8 @@ def spark_preprocessing(spark):
 
     # Fit and transform the data
     df = pipeline.fit(df).transform(df)
+
+    df.show()
 
     # Drop the original and indexed categorical columns
     df = df.drop(*categorical_columns)
