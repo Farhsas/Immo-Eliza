@@ -4,12 +4,10 @@ import joblib
 
 from preprocessing import preprocess
 
-from sklearn.model_selection import train_test_split
 from sklearn.impute import SimpleImputer
 from sklearn.pipeline import Pipeline
 from sklearn.preprocessing import OneHotEncoder, MinMaxScaler
 from sklearn.compose import ColumnTransformer
-from sklearn.metrics import r2_score
 
 from xgboost import XGBRegressor
 

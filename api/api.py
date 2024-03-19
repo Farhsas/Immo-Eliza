@@ -1,5 +1,9 @@
 from flask import Flask, request, jsonify
-from flask.helpers import _prepare_send_file_kwargs
+
+from sklearn.impute import SimpleImputer
+from sklearn.pipeline import Pipeline
+from sklearn.preprocessing import OneHotEncoder, MinMaxScaler
+from sklearn.compose import ColumnTransformer
 
 import pandas as pd
 import joblib
