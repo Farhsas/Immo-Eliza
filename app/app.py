@@ -7,7 +7,7 @@ import streamlit as st
 def main():
     st.title("Immo-Eliza Estimation System")
 
-    property_id = st.number_input("Id:", min_value=1, value=1)
+    # property_id = st.number_input("Id:", min_value=1, value=1)
     postal_code = st.text_input("Postal Code:")
     region = st.selectbox("Region:", ["Wallonie", "Flandres", "Bruxelles"])
     province = st.selectbox("Province:",
@@ -44,7 +44,7 @@ def main():
     )
 
     user_inputs = {
-        "property_id": property_id,
+        # "property_id": property_id,
         "postal_code": postal_code,
         "type_of_property": type_of_property,
         "subtype_of_property": subtype_of_property,
@@ -74,7 +74,6 @@ def main():
 
         prediction_result = model.predict(df)
 
-        # Display the prediction result
         if prediction_result is not None:
             st.subheader("Prediction Result:")
             st.write(f"Estimated Price: {prediction_result[0]}")
