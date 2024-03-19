@@ -14,12 +14,12 @@ def main():
             "Brabant Wallon", "Hainaut", "Liège", "Luxembourg", "Namur"])
     type_of_property = st.selectbox("Type of Property:", ["HOUSE", "APARTMENT"])
     subtype_of_property = st.selectbox("Subtype of Property:",
-        ['APARTMENT', 'HOUSE_GROUP', 'HOUSE', 'APARTMENT_BLOCK', 'KOT',
-           'MANSION', 'PENTHOUSE', 'GROUND_FLOOR', 'APARTMENT_GROUP',
-           'DUPLEX', 'VILLA', 'MIXED_USE_BUILDING', 'FLAT_STUDIO',
-           'TOWN_HOUSE', 'LOFT', 'BUNGALOW', 'CHALET', 'COUNTRY_COTTAGE',
-           'EXCEPTIONAL_PROPERTY', 'TRIPLEX', 'FARMHOUSE', 'CASTLE',
-           'OTHER_PROPERTY', 'MANOR_HOUSE', 'SERVICE_FLAT', 'PAVILION'])
+        ["APARTMENT", "HOUSE_GROUP", "HOUSE", "APARTMENT_BLOCK", "KOT",
+           "MANSION", "PENTHOUSE", "GROUND_FLOOR", "APARTMENT_GROUP",
+           "DUPLEX", "VILLA", "MIXED_USE_BUILDING", "FLAT_STUDIO",
+           "TOWN_HOUSE", "LOFT", "BUNGALOW", "CHALET", "COUNTRY_COTTAGE",
+           "EXCEPTIONAL_PROPERTY", "TRIPLEX", "FARMHOUSE", "CASTLE",
+           "OTHER_PROPERTY", "MANOR_HOUSE", "SERVICE_FLAT", "PAVILION"])
     rooms = st.number_input("Number of Rooms:", min_value=1, value=1)
     bedrooms = st.number_input("Number of bedrooms:", min_value=1, value=1)
     bathrooms = st.number_input("Number of bathrooms:", min_value=1, value=1)
@@ -28,18 +28,18 @@ def main():
     terrace = st.checkbox("Terrace")
     garden = st.checkbox("Garden")
     heating = st.selectbox("Type of heating",
-        ['GAS', 'FUELOIL', 'ELECTRIC', 'PELLET', 'WOOD', 'CARBON',
-           'SOLAR'])
+        ["GAS", "FUELOIL", "ELECTRIC", "PELLET", "WOOD", "CARBON",
+           "SOLAR"])
     kitchen = st.selectbox("Equipped Kitchen",
-        ['INSTALLED', 'SEMI_EQUIPPED', 'HYPER_EQUIPPED',
-           'USA_HYPER_EQUIPPED', 'NOT_INSTALLED', 'USA_SEMI_EQUIPPED',
-           'USA_INSTALLED', 'USA_UNINSTALLED'])
+        ["INSTALLED", "SEMI_EQUIPPED", "HYPER_EQUIPPED",
+           "USA_HYPER_EQUIPPED", "NOT_INSTALLED", "USA_SEMI_EQUIPPED",
+           "USA_INSTALLED", "USA_UNINSTALLED"])
     furnished = st.checkbox("Furnished")
     swimming_pool = st.checkbox("Swimming Pool")
     num_of_facades = st.number_input("Number of Facades:", min_value=0, value=0)
     state_of_building = st.selectbox("State of Building:",
-        ['GOOD', 'TO_BE_DONE_UP', 'AS_NEW', 'TO_RENOVATE',
-               'JUST_RENOVATED', 'TO_RESTORE']
+        ["GOOD", "TO_BE_DONE_UP", "AS_NEW", "TO_RENOVATE",
+               "JUST_RENOVATED", "TO_RESTORE"]
     )
 
     user_inputs = {
