@@ -1,16 +1,7 @@
 import requests
+import joblib
+import pandas as pd
 import streamlit as st
-
-
-def make_prediction(user_inputs):
-    try:
-        response = requests.post("http://127.0.0.1:5000/predict", json=user_inputs)
-
-        return response.json()
-
-    except Exception as e:
-        st.error(f"Error making prediction: {str(e)}")
-        return None
 
 
 def main():
@@ -77,12 +68,16 @@ def main():
     if st.button("Make Estimation"):
         st.info("Making estimation...")
 
-        prediction_result = make_prediction(user_inputs)
+        model = joblib.load("models/pipeline.joblib")
+
+        df = pd.DataFrame.from_dict(user_inputs, orient='index').T
+
+        prediction_result = model.predict(df)
 
         # Display the prediction result
         if prediction_result is not None:
             st.subheader("Prediction Result:")
-            st.write(f"Estimated Price: {prediction_result}")
+            st.write(f"Estimated Price: {prediction_result[0]}")
 
 
 if __name__ == "__main__":
