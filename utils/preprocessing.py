@@ -53,16 +53,7 @@ def set_boolean(df, column_name):
     return df
 
 
-def preprocess(type):
-    if type == "apartments":
-        df = pd.read_csv("datasets/apartments/apartments_data.csv")
-        print("Processing apartments!")
-    elif type == "houses":
-        df = pd.read_csv("datasets/houses/houses_data.csv")
-        print("Processing houses!")
-    else:
-        return
-
+def preprocess(df):
     df = df.dropna(subset=["postal_code"])
     df = filter_invalid_postal_code(df, "postal_code")
     df = df.astype({"postal_code": int})
@@ -75,24 +66,6 @@ def preprocess(type):
 
     df = df[(df["price"] > lower) & (df["price"] < upper)]
 
-    df = one_hot_encoding(df, type)
-
-    df = set_boolean(df, "garden")
-    df = set_boolean(df, "furnished")
-    df = set_boolean(df, "openfire")
-    df = set_boolean(df, "swimmingpool")
-
-    df = df.dropna(subset=["price"])
-
-    if type == "houses":
-        df.to_csv("datasets/houses/houses_cleaned.csv")
-    elif type == "apartments":
-        df.to_csv("datasets/apartments/apartments_cleaned.csv")
-
     print("Preprocessing Done!")
 
     return df
-
-if __name__ == "__main__":
-    preprocess("houses")
-    preprocess("apartments")

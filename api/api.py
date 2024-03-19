@@ -2,48 +2,18 @@ from flask import Flask, request, jsonify
 from flask.helpers import _prepare_send_file_kwargs
 
 import pandas as pd
-import pickle
+import joblib
 
 app = Flask(__name__)
 
-preprocess_apart = pickle.load(open("models/preprocessing_apartments.pkl", "rb"))
-preprocess_houses = pickle.load(open("models/preprocessing_houses.pkl", "rb"))
-
-model_apart = pickle.load(open("models/xgb_apartments.pkl", "rb"))
-model_houses = pickle.load(open("models/xgb_houses.pkl", "rb"))
-
+model = joblib.load("models/pipeline.joblib")
 
 def make_estimation(data):
     df = pd.DataFrame.from_dict(data, orient='index').T
 
-    df_temp = df[["type_of_property", "subtype_of_property", "state_of_property", "region", "province", "heating", "kitchen"]]
-    encoded_data = preprocess_apart.transform(df_temp).toarray()
+    estimation = model.predict(df)
 
-    df_encoded = pd.DataFrame(
-        encoded_data,
-        columns=preprocess_apart.get_feature_names_out(
-            input_features=["type_of_property", "subtype_of_property", "state_of_property", "region", "province", "heating", "kitchen"]
-        )
-    )
-
-    df = pd.concat([df, df_encoded], axis=1)
-    df = df.drop(["property_id", "type_of_property", "subtype_of_property", "state_of_property", "region", "province", "heating", "kitchen"], axis=1)
-    df["postal_code"] = df["postal_code"].astype(int)
-    df["bedrooms"] = df["bedrooms"].astype(int)
-    df["living_area"] = df["living_area"].astype(float)
-    df["openfire"] = df["openfire"].astype(bool)
-    df["terrace"] = df["terrace"].astype(bool)
-    df["garden"] = df["garden"].astype(bool)
-    df["rooms"] = df["rooms"].astype(int)
-    df["bathrooms"] = df["bathrooms"].astype(int)
-    df["facade_count"] = df["facade_count"].astype(int)
-    df["furnished"] = df["furnished"].astype(bool)
-    df["swimmingpool"] = df["swimmingpool"].astype(bool)
-
-    estimation = model_apart.predict(df)
     return estimation
-
-
 
 @app.route("/", methods=["GET"])
 def home():
@@ -66,7 +36,7 @@ def predict():
             return jsonify({"error": f"Missing field: {field}"}), 400
 
     estimation = make_estimation(data)
-    return jsonify({"estimation": str(estimation)})
+    return jsonify(str(estimation[0]))
 
 
 if __name__ == "__main__":
